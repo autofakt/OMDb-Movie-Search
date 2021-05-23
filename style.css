@@ -1,0 +1,19 @@
+.redText {
+  color: red;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+#results {
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+
+}
+
+#movieTitle {
+font-weight: bold;
+}
