@@ -1,4 +1,5 @@
-var apiKey = "apikey=ADDYOUROWNHERE";
+$("#errorCall").hide();
+var apiKey = "apikey=ADDYOURKEYHERE";
 
 function getSearchType() {
   var searchType = $("#searchType").val();
@@ -24,19 +25,24 @@ function loadCardData(result) {
   var card = $("<div class='card' style='width: 20rem;'></div>");
   var image = $("<img class='card-img-top' src='...' alt='Card image cap'>");
 
-  image.attr("src", result.Poster)
-  card.append(image)
+  if (result.Poster.length > 6) { //adds a stock poster img for results that dont have an image
+    image.attr("src", result.Poster);
+  } else {
+    image.attr("src", "imdblogo_300x448.jpg");
+  }
+
+  card.append(image);
 
   var list = $("<ul class='list-group list-group-flush'></ul>");
 
   var title = result.Title;
-  var listItem1 = $("<li id='movieTitle' class='list-group-item'>" + title + "</li>")
+  var listItem1 = $("<li id='movieTitle' class='list-group-item'>" + title + "</li>");
 
   var type = result.Type;
-  var listItem2 = $("<li class='list-group-item'>" + type + "</li>")
+  var listItem2 = $("<li class='list-group-item'>" + type + "</li>");
 
   var year = result.Year;
-  var listItem3 = $("<li class='list-group-item'>" + year + "</li>")
+  var listItem3 = $("<li class='list-group-item'>" + year + "</li>");
 
   list.append(listItem1);
   list.append(listItem2);
@@ -66,14 +72,17 @@ $("#searchBtn").on("click", function() {
 
   $.getJSON("https://www.omdbapi.com/?" + apiKey + searchType + searchTerm, function(result) {
     if (result.Response == "True") {
-      console.log("True");
+      //console.log("True");
+      $('#errorCall').css('display', 'none');
       for (result of result.Search) {
 
         loadCardData(result);
       }
     } else {
-      console.log("False");
-      alert('Something went wrong');
+      //  console.log("False");
+      $('#errorCall').css('display', 'block');
+
+
     }
 
 

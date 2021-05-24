@@ -17,3 +17,10 @@
 #movieTitle {
 font-weight: bold;
 }
+
+#errorCall {
+  display: none;
+  font-weight: bold;
+  color: red;
+  text-align: center;
+}
