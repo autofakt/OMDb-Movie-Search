@@ -1,5 +1,5 @@
 $("#errorCall").hide();
-var apiKey = "addyourown";
+var apiKey = "USE YOUR OWN";
 
 function getSearchType() {
   var searchType = $("#searchType").val();
@@ -53,10 +53,10 @@ function loadCardData(result) {
   var linkBody = $("<div class='card-body'></div>");
 
   var cardID = result.imdbID;
-  var link = $("<a href='#' class='card-link'>View on IMDb</a>");
+  var link = $("<a href='#' class='card-link' target='_blank'>View on IMDb</a>");
   //alert(link);
   var finalLink = "https://www.imdb.com/title/" + cardID + "/";
-  console.log(finalLink);
+  //console.log(finalLink);
   link.attr("href", finalLink);
   linkBody.append(link);
   card.append(linkBody);
@@ -64,31 +64,13 @@ function loadCardData(result) {
   $("#results").append(card);
 }
 
-function makePagination(result, originalLink){
-  var totalSearchCount = result.totalResults;
-  var pageCount = Math.ceil(totalSearchCount/10);
-  var nav = $("<nav aria-label='...'></nav>");
-  var ul = $("<ul class='pagination pagination-sm pagination flex-wrap'></ul>");
-
-  for(var i = 1; i <=pageCount;i++){
-    var newLink = originalLink + "&page=" + i;
-    var pageItem = $("<li class='page-item'><a class='page-link' href='"+newLink+"'>" +i+"</a></li>");
-    ul.append(pageItem);
-  }
-  nav.append(ul);
-  $("#results").append(nav);
-}
-
-$("#searchBtn").on("click", function() {
-  var searchTerm = "&s=" + $("#searchTerm").val();
-  var searchType = getSearchType();
-
+function makeCall(link){
   $("#results").empty(); // This will remove everything in the div
-
-  $.getJSON("https://www.omdbapi.com/?" + apiKey + searchType + searchTerm, function(result) {
-    var originalLink = "https://www.omdbapi.com/?" + apiKey + searchType + searchTerm;
+  console.log("original call: " +link);
+  $.getJSON(link, function(result) {
+    var originalLink = link;
     if (result.Response == "True") {
-      console.log(result.totalResults);
+      //console.log(result.totalResults);
       $('#errorCall').css('display', 'none');
       for (each of result.Search) {
 
@@ -105,7 +87,64 @@ $("#searchBtn").on("click", function() {
 makePagination(result, originalLink);
 
   });
+}
 
+function makeCall2(link,page){
+  $("#results").empty(); // This will remove everything in the div
+  var newLinkWithPage = link + "&page=" + page;
+  console.log("Second call: " +newLinkWithPage);
+  $.getJSON(newLinkWithPage, function(result) {
+
+    if (result.Response == "True") {
+      //console.log(result.totalResults);
+      $('#errorCall').css('display', 'none');
+      for (each of result.Search) {
+
+        loadCardData(each);
+      }
+
+    } else {
+      //  console.log("False");
+      $('#errorCall').css('display', 'block');
+
+
+    }
+
+
+
+  });
+}
+
+function makePagination(result, originalLink){
+  var totalSearchCount = result.totalResults;
+  var pageCount = Math.ceil(totalSearchCount/10);
+  var nav = $("<nav aria-label='...'></nav>");
+  var ul = $("<ul class='pagination pagination-sm pagination flex-wrap'></ul>");
+
+  for(var i = 1; i <=pageCount;i++){
+    //var newLink = originalLink + "&page=" + i;
+    var pageItem = $("<li class='page-item'></li>");
+    var pageItem2 = $("<a class='page-link' href='#'>" +i+"</a>");
+    pageItem2.click(function(){
+      //lert(this.innerText);
+      var linkPage = this.innerText;
+      makeCall2(originalLink, linkPage);
+    })
+    pageItem.append(pageItem2);
+    ul.append(pageItem);
+  }
+  nav.append(ul);
+  $("#pages").append(nav);
+}
+
+$("#searchBtn").on("click", function() {
+  var searchTerm = "&s=" + $("#searchTerm").val();
+  var searchType = getSearchType();
+$("#pages").empty();
+var link = "https://www.omdbapi.com/?" + apiKey + searchType + searchTerm;
+
+
+makeCall(link);
 
 
 });

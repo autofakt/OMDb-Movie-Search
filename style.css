@@ -6,6 +6,15 @@
   visibility: hidden;
 }
 
+.searchBar{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.item{
+  margin-right: 15px;
+}
+
 #results {
 
   display: flex;

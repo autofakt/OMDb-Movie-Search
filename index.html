@@ -15,9 +15,12 @@
 
   <div class="jumbotron">
     <h1>OMDb Movie Search</h1>
-    <input id="searchTerm" type="text" />
-    <label>Type</label>
-    <select name="Type" id="searchType">
+    <div class="searchBar">
+
+
+    <input class="item" id="searchTerm" type="text" />
+    <label class="item">Type</label>
+    <select class="item" name="Type" id="searchType">
       <option value="All">All</option>
       <option value="Movie">Movie</option>
       <option value="Series">Series</option>
@@ -25,9 +28,13 @@
     </select>
 
 
-    <button id="searchBtn" class="btn btn-primary">Search</button>
+    <button id="searchBtn" class="btn btn-primary item">Search</button>
+    </div>
     <hr />
     <div id="results" class="alert alert-secondary">
+
+    </div>
+    <div id="pages" class="alert alert-secondary">
 
     </div>
     <p id="errorCall">No results found. Please try again</p>
