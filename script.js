@@ -1,5 +1,5 @@
 $("#errorCall").hide();
-var apiKey = "apikey=ADDYOURKEYHERE";
+var apiKey = "addyourown";
 
 function getSearchType() {
   var searchType = $("#searchType").val();
@@ -64,6 +64,21 @@ function loadCardData(result) {
   $("#results").append(card);
 }
 
+function makePagination(result, originalLink){
+  var totalSearchCount = result.totalResults;
+  var pageCount = Math.ceil(totalSearchCount/10);
+  var nav = $("<nav aria-label='...'></nav>");
+  var ul = $("<ul class='pagination pagination-sm pagination flex-wrap'></ul>");
+
+  for(var i = 1; i <=pageCount;i++){
+    var newLink = originalLink + "&page=" + i;
+    var pageItem = $("<li class='page-item'><a class='page-link' href='"+newLink+"'>" +i+"</a></li>");
+    ul.append(pageItem);
+  }
+  nav.append(ul);
+  $("#results").append(nav);
+}
+
 $("#searchBtn").on("click", function() {
   var searchTerm = "&s=" + $("#searchTerm").val();
   var searchType = getSearchType();
@@ -71,13 +86,15 @@ $("#searchBtn").on("click", function() {
   $("#results").empty(); // This will remove everything in the div
 
   $.getJSON("https://www.omdbapi.com/?" + apiKey + searchType + searchTerm, function(result) {
+    var originalLink = "https://www.omdbapi.com/?" + apiKey + searchType + searchTerm;
     if (result.Response == "True") {
-      //console.log("True");
+      console.log(result.totalResults);
       $('#errorCall').css('display', 'none');
-      for (result of result.Search) {
+      for (each of result.Search) {
 
-        loadCardData(result);
+        loadCardData(each);
       }
+
     } else {
       //  console.log("False");
       $('#errorCall').css('display', 'block');
@@ -85,7 +102,7 @@ $("#searchBtn").on("click", function() {
 
     }
 
-
+makePagination(result, originalLink);
 
   });
 
